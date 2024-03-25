@@ -33,6 +33,7 @@ public class Layout : MonoBehaviour
     // Start is called before the first frame update 
 
     // This function is called to read in the LayoutXML.xml file
+
     public void ReadLayout(string xmlText)
     {
         xmlr = new PT_XMLReader();
@@ -66,6 +67,7 @@ public class Layout : MonoBehaviour
             tSD.layerID = int.Parse(slotsX[i].att("layer"));
             // This converts the number of the layerID into a text layerName
             tSD.layerName = sortingLayerNames[tSD.layerID]; // a
+
             switch (tSD.type)
             {
                 // pull additional attributes based on the type of this <slot>
@@ -92,17 +94,4 @@ public class Layout : MonoBehaviour
             }
         }
     }
-}
-
-
-void Start() 
-        {
-        
-        }
-
-    // Update is called once per frame
-    void Update()
-        {
-        
-        }
 }
