@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Deck : MonoBehaviour {
 
-[Header("Set in Inspector")]
+	[Header("Set in Inspector")]
 	//Suits
 	public Sprite suitClub;
 	public Sprite suitDiamond;
@@ -170,7 +170,8 @@ public class Deck : MonoBehaviour {
 		//  This is effectively the MakeCard function
 		//
 		for (int i=0; i<cardNames.Count; i++) {
-			GameObject cgo = Instantiate(prefabCard) as GameObject;
+            cards.Add(MakeCard(i));
+            GameObject cgo = Instantiate(prefabCard) as GameObject;
 			cgo.transform.parent = deckAnchor;
 			Card card = cgo.GetComponent<Card>();
 			
@@ -274,9 +275,35 @@ public class Deck : MonoBehaviour {
 			cards.Add (card);
 		} // for all the Cardnames	
 	} // makeCards
-	
-	//Find the proper face card
-	public Sprite GetFace(string faceS) {
+
+    private Card MakeCard(int cNum)
+    { // a
+      // Create a new Card GameObject
+        GameObject cgo = Instantiate(prefabCard) as GameObject;
+        // Set the transform.parent of the new card to the anchor.
+        cgo.transform.parent = deckAnchor;
+        Card card = cgo.GetComponent<Card>(); // Get the Card Component
+                                              // This line stacks the cards so that they're all in nice rows
+        cgo.transform.localPosition = new Vector3((cNum % 13) * 3, cNum / 13 * 4, 0);
+        // Assign basic values to the Card
+        card.name = cardNames[cNum];
+        card.suit = card.name[0].ToString();
+        card.rank = int.Parse(card.name.Substring(1));
+        if (card.suit == "D" || card.suit == "H")
+        {
+            card.colS = "Red";
+            card.color = Color.red;
+        }
+        // Pull the CardDefinition for this card
+        card.def = GetCardDefinitionByRank(card.rank);
+        AddDecorators(card);
+        return card;
+    }
+
+
+
+    //Find the proper face card
+    public Sprite GetFace(string faceS) {
 		foreach (Sprite tS in faceSprites) {
 			if (tS.name == faceS) {
 				return (tS);
@@ -296,8 +323,10 @@ public class Deck : MonoBehaviour {
 	 	List<Card> tCards = new List<Card>();
 
 	 	int ndx;   // which card to move
+        tCards = new List<Card>(); // Initialize the temporary List
+                                   // Repeat as long as there are cards in the original List
 
-	 	while (oCards.Count > 0) 
+        while (oCards.Count > 0) 
 	 	{
 	 		// find a random card, add it to shuffled list and remove from original deck
 	 		ndx = Random.Range(0,oCards.Count);
