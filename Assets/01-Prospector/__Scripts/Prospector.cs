@@ -39,6 +39,7 @@ public class Prospector : MonoBehaviour
         S = this;
         SetUpUITexts();
     }
+
     void SetUpUITexts()
     {
         // Set up the HighScore UI Text
@@ -64,6 +65,7 @@ public class Prospector : MonoBehaviour
         // Make the end of round texts invisible
         ShowResultsUI(false);
     }
+
     void ShowResultsUI(bool show)
     {
         gameOverText.gameObject.SetActive(show);
