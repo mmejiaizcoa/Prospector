@@ -11,14 +11,12 @@ public enum eScoreEvent
     gameWin,
     gameLoss
 }
-
 // ScoreManager handles all of the scoring
 public class ScoreManager : MonoBehaviour
-{ // a
-    static private ScoreManager S; // b
+{
+    static private ScoreManager S;
     static public int SCORE_FROM_PREV_ROUND = 0;
     static public int HIGH_SCORE = 0;
-
     [Header("Set Dynamically")]
     // Fields to track score info
     public int chain = 0;
@@ -28,7 +26,7 @@ public class ScoreManager : MonoBehaviour
     void Awake()
     {
         if (S == null)
-        { // c
+        {
             S = this; // Set the private singleton
         }
         else
@@ -45,10 +43,8 @@ public class ScoreManager : MonoBehaviour
         // And reset the SCORE_FROM_PREV_ROUND
         SCORE_FROM_PREV_ROUND = 0;
     }
-
-    static public void EVENT(
-    eScoreEvent evt)
-    { // d
+    static public void EVENT(eScoreEvent evt)
+    {
         try
         { // try-catch stops an error from breaking your program
             S.Event(evt);
@@ -58,7 +54,6 @@ public class ScoreManager : MonoBehaviour
             Debug.LogError("ScoreManager:EVENT() called while S=null.\n" + nre);
         }
     }
-
     void Event(eScoreEvent evt)
     {
         switch (evt)
@@ -91,6 +86,7 @@ public class ScoreManager : MonoBehaviour
                 {
                     print("You got the high score! High score: " + score);
                     HIGH_SCORE = score;
+
                     PlayerPrefs.SetInt("ProspectorHighScore", score);
                 }
                 else
@@ -103,8 +99,7 @@ public class ScoreManager : MonoBehaviour
                 break;
         }
     }
-
-    static public int CHAIN { get { return S.chain; } } // e
+    static public int CHAIN { get { return S.chain; } }
     static public int SCORE { get { return S.score; } }
     static public int SCORE_RUN { get { return S.scoreRun; } }
 }

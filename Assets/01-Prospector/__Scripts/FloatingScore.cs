@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 // An enum to track the possible states of a FloatingScore
 public enum eFSState
 {
@@ -44,6 +43,7 @@ public class FloatingScore : MonoBehaviour
     public GameObject reportFinishTo = null;
     private RectTransform rectTrans;
     private Text txt;
+
     // Set up the FloatingScore and movement
     // Note the use of parameter defaults for eTimeS & eTimeD
     public void Init(List<Vector2> ePts, float eTimeS = 0, float eTimeD = 1)
@@ -52,6 +52,7 @@ public class FloatingScore : MonoBehaviour
         rectTrans.anchoredPosition = Vector2.zero;
         txt = GetComponent<Text>();
         bezierPts = new List<Vector2>(ePts);
+
         if (ePts.Count == 1)
         { // If there's only one point
           // ...then just go there.
@@ -114,6 +115,7 @@ public class FloatingScore : MonoBehaviour
             }
             // Use Bézier curve to move this to the right point
             Vector2 pos = Utils.Bezier(uC, bezierPts);
+
             // RectTransform anchors can be used to position UI objects relative
             // to total size of the screen
             rectTrans.anchorMin = rectTrans.anchorMax = pos;

@@ -18,11 +18,11 @@ public class Prospector : MonoBehaviour
     public Vector3 layoutCenter;
     public Vector2 fsPosMid = new Vector2(0.5f, 0.90f);
     public Vector2 fsPosRun = new Vector2(0.5f, 0.75f);
+
     public Vector2 fsPosMid2 = new Vector2(0.4f, 1.0f);
     public Vector2 fsPosEnd = new Vector2(0.5f, 0.95f);
     public float reloadDelay = 2f;// 2 sec delay between rounds
     public Text gameOverText, roundResultText, highScoreText;
-
 
     [Header("Set Dynamically")]
     public Deck deck;
@@ -39,7 +39,6 @@ public class Prospector : MonoBehaviour
         S = this;
         SetUpUITexts();
     }
-
     void SetUpUITexts()
     {
         // Set up the HighScore UI Text
@@ -47,6 +46,7 @@ public class Prospector : MonoBehaviour
         if (go != null)
         {
             highScoreText = go.GetComponent<Text>();
+
         }
         int highScore = ScoreManager.HIGH_SCORE;
         string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
@@ -65,7 +65,6 @@ public class Prospector : MonoBehaviour
         // Make the end of round texts invisible
         ShowResultsUI(false);
     }
-
     void ShowResultsUI(bool show)
     {
         gameOverText.gameObject.SetActive(show);
@@ -75,11 +74,21 @@ public class Prospector : MonoBehaviour
     void Start()
     {
         Scoreboard.S.score = ScoreManager.SCORE;
-        deck = GetComponent<Deck>(); // Get the Deck
-        deck.InitDeck(deckXML.text); // Pass DeckXML to it
-        Deck.Shuffle(ref deck.cards); // This shuffles the deck
+
+        deck = GetComponent<Deck>();
+        deck.InitDeck(deckXML.text);
+        Deck.Shuffle(ref deck.cards); // This shuffles the deck by reference
+        Card c;
+        for (int cNum = 0; cNum < deck.cards.Count; cNum++)
+        {
+            c = deck.cards[cNum];
+            c.transform.localPosition = new Vector3((cNum % 13) * 3, cNum / 13 * 4, 0);
+        }
+
         layout = GetComponent<Layout>(); // Get the Layout component
         layout.ReadLayout(layoutXML.text); // Pass LayoutXML to it
+
+
         drawPile = ConvertListCardsToListCardProspectors(deck.cards);
         LayoutGame();
     }
@@ -89,11 +98,12 @@ public class Prospector : MonoBehaviour
         CardProspector tCP;
         foreach (Card tCD in lCD)
         {
-            tCP = tCD as CardProspector; // a
+            tCP = tCD as CardProspector;
             lCP.Add(tCP);
         }
         return (lCP);
     }
+
     // The Draw function will pull a single card from the drawPile and return it
     CardProspector Draw()
     {
@@ -101,11 +111,10 @@ public class Prospector : MonoBehaviour
         drawPile.RemoveAt(0); // Then remove it from List<> drawPile
         return (cd); // And return it
     }
-
     // LayoutGame() positions the initial tableau of cards, a.k.a. the "mine"
     void LayoutGame()
     {
-        // Create an empty GameObject to serve as an anchor for the tableau // a
+        // Create an empty GameObject to serve as an anchor for the tableau
         if (layoutAnchor == null)
         {
             GameObject tGO = new GameObject("_LayoutAnchor");
@@ -132,7 +141,9 @@ public class Prospector : MonoBehaviour
             cp.slotDef = tSD;
             // CardProspectors in the tableau have the state CardState.tableau
             cp.state = eCardState.tableau;
-            cp.SetSortingLayerName(tSD.layerName);
+            // CardProspectors in the tableau have the state CardState.tableau
+            cp.SetSortingLayerName(tSD.layerName); // Set the sorting layers
+
             tableau.Add(cp); // Add this CardProspector to the List<> tableau
         }
         // Set which cards are hiding others
@@ -144,8 +155,10 @@ public class Prospector : MonoBehaviour
                 tCP.hiddenBy.Add(cp);
             }
         }
+
         // Set up the initial target card
         MoveToTarget(Draw());
+
         // Set up the Draw pile
         UpdateDrawPile();
     }
@@ -165,7 +178,6 @@ public class Prospector : MonoBehaviour
         // If it's not found, return null
         return (null);
     }
-
     // This turns cards in the Mine face-up or face-down
     void SetTableauFaces()
     {
@@ -201,7 +213,6 @@ public class Prospector : MonoBehaviour
         cd.SetSortingLayerName(layout.discardPile.layerName);
         cd.SetSortOrder(-100 + discardPile.Count);
     }
-
     // Make cd the new target card
     void MoveToTarget(CardProspector cd)
     {
@@ -211,6 +222,7 @@ public class Prospector : MonoBehaviour
         cd.state = eCardState.target;
         cd.transform.parent = layoutAnchor;
         // Move to the target position
+
         cd.transform.localPosition = new Vector3(
         layout.multiplier.x * layout.discardPile.x,
         layout.multiplier.y * layout.discardPile.y,
@@ -220,7 +232,6 @@ public class Prospector : MonoBehaviour
         cd.SetSortingLayerName(layout.discardPile.layerName);
         cd.SetSortOrder(0);
     }
-
     // Arranges all the cards of the drawPile to show how many are left
     void UpdateDrawPile()
     {
@@ -230,24 +241,19 @@ public class Prospector : MonoBehaviour
         {
             cd = drawPile[i];
             cd.transform.parent = layoutAnchor;
-
             // Position it correctly with the layout.drawPile.stagger
             Vector2 dpStagger = layout.drawPile.stagger;
             cd.transform.localPosition = new Vector3(
             layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
             layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
             -layout.drawPile.layerID + 0.1f * i);
-
             cd.faceUp = false; // Make them all face-down
             cd.state = eCardState.drawpile;
-
             // Set depth sorting
             cd.SetSortingLayerName(layout.drawPile.layerName);
             cd.SetSortOrder(-10 * i);
         }
     }
-
-
     // CardClicked is called any time a card in the game is clicked
     public void CardClicked(CardProspector cd)
     {
@@ -290,7 +296,6 @@ public class Prospector : MonoBehaviour
         // Check to see whether the game is over or not
         CheckForGameOver();
     }
-
     // Test whether the game is over
     void CheckForGameOver()
     {
@@ -299,6 +304,7 @@ public class Prospector : MonoBehaviour
         {
             // Call GameOver() with a win
             GameOver(true);
+
             return;
         }
         // If there are still cards in the draw pile, the game's not over
@@ -319,7 +325,6 @@ public class Prospector : MonoBehaviour
         // Call GameOver with a loss
         GameOver(false);
     }
-
     // Called when the game is over. Simple for now, but expandable
     void GameOver(bool won)
     {
@@ -330,6 +335,7 @@ public class Prospector : MonoBehaviour
             gameOverText.text = "Round Over";
             roundResultText.text = "You won this round!\nRound Score: " + score;
             ShowResultsUI(true);
+            //print("Game Over. You won! :)");
             ScoreManager.EVENT(eScoreEvent.gameWin);
             FloatingScoreHandler(eScoreEvent.gameWin);
         }
@@ -346,12 +352,16 @@ public class Prospector : MonoBehaviour
                 roundResultText.text = "Your final score was: " + score;
             }
             ShowResultsUI(true);
+            //print("Game Over. You Lost. :(");
             ScoreManager.EVENT(eScoreEvent.gameLoss);
             FloatingScoreHandler(eScoreEvent.gameLoss);
         }
-        Invoke("ReloadLevel", reloadDelay); // a
+        // Reload the scene, resetting the game
+        //SceneManager.LoadScene("__Prospector_Scene_0");
+        // Reload the scene in reloadDelay seconds
+        // This will give the score a moment to travel
+        Invoke("ReloadLevel", reloadDelay);
     }
-
     void ReloadLevel()
     {
         // Reload the scene, resetting the game
@@ -374,7 +384,6 @@ public class Prospector : MonoBehaviour
         // Otherwise, return false
         return (false);
     }
-
     // Handle FloatingScore movement
     void FloatingScoreHandler(eScoreEvent evt)
     {

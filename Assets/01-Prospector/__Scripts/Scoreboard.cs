@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 // The Scoreboard class manages showing the score to the player
 public class Scoreboard : MonoBehaviour
 {
@@ -13,7 +12,6 @@ public class Scoreboard : MonoBehaviour
     [SerializeField] private int _score = 0;
     [SerializeField] private string _scoreString;
     private Transform canvasTrans;
-
     // The score property also sets the scoreString
     public int score
     {
@@ -27,7 +25,6 @@ public class Scoreboard : MonoBehaviour
             scoreString = _score.ToString("N0");
         }
     }
-
     // The scoreString property also sets the Text.text
     public string scoreString
     {
@@ -40,8 +37,8 @@ public class Scoreboard : MonoBehaviour
             _scoreString = value;
             GetComponent<Text>().text = _scoreString;
         }
-    }
 
+    }
     void Awake()
     {
         if (S == null)
@@ -54,13 +51,11 @@ public class Scoreboard : MonoBehaviour
         }
         canvasTrans = transform.parent;
     }
-
     // When called by SendMessage, this adds the fs.score to this.score
     public void FSCallback(FloatingScore fs)
     {
         score += fs.score;
     }
-
     // This will Instantiate a new FloatingScore GameObject and initialize it.
     // It also returns a pointer to the FloatingScore created so that the
     // calling function can do more with it (like set fontSizes, and so on)

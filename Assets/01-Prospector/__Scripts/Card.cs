@@ -16,12 +16,14 @@ public class Card : MonoBehaviour
 
     public GameObject back;  // back of card;
     public CardDefinition def;  // from DeckXML.xml		
+
+    // List of the SpriteRenderer Components of this GameObject and its children
     public SpriteRenderer[] spriteRenderers;
+
     void Start()
     {
         SetSortOrder(0); // Ensures that the card starts properly depth sorted
     }
-
     // If spriteRenderers is not yet defined, this function defines it
     public void PopulateSpriteRenderers()
     {
@@ -32,7 +34,6 @@ public class Card : MonoBehaviour
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         }
     }
-
     // Sets the sortingLayerName on all SpriteRenderer Components
     public void SetSortingLayerName(string tSLN)
     {
@@ -40,9 +41,9 @@ public class Card : MonoBehaviour
         foreach (SpriteRenderer tSR in spriteRenderers)
         {
             tSR.sortingLayerName = tSLN;
+
         }
     }
-
     // Sets the sortingOrder of all SpriteRenderer Components
     public void SetSortOrder(int sOrd)
     { // a
@@ -60,9 +61,8 @@ public class Card : MonoBehaviour
             // switch based on the names
             switch (tSR.gameObject.name)
             {
-                case "back"
-            : // if the name is "back"
-              // Set it to the highest layer to cover the other sprites
+                case "back": // if the name is "back"
+                             // Set it to the highest layer to cover the other sprites
                     tSR.sortingOrder = sOrd + 2;
                     break;
                 case "face": // if the name is "face"
@@ -73,7 +73,6 @@ public class Card : MonoBehaviour
             }
         }
     }
-
     public bool faceUp
     {
         get
@@ -86,6 +85,7 @@ public class Card : MonoBehaviour
             back.SetActive(!value);
         }
     }
+
     // Virtual methods can be overridden by subclass methods with the same name
     virtual public void OnMouseUpAsButton()
     {
@@ -94,17 +94,19 @@ public class Card : MonoBehaviour
 } // class Card
 
 [System.Serializable]
-public class Decorator{
-	public string	type;			// For card pips, tyhpe = "pip"
-	public Vector3	loc;			// location of sprite on the card
-	public bool		flip = false;	//whether to flip vertically
-	public float 	scale = 1.0f;
+public class Decorator
+{
+    public string type;         // For card pips, tyhpe = "pip"
+    public Vector3 loc;         // location of sprite on the card
+    public bool flip = false;   //whether to flip vertically
+    public float scale = 1.0f;
 }
 
 [System.Serializable]
-public class CardDefinition{
-	public string	face;	//sprite to use for face cart
-	public int		rank;	// value from 1-13 (Ace-King)
-	public List<Decorator>	
-					pips = new List<Decorator>();  // Pips Used
+public class CardDefinition
+{
+    public string face; //sprite to use for face cart
+    public int rank;    // value from 1-13 (Ace-King)
+    public List<Decorator>
+                    pips = new List<Decorator>();  // Pips Used
 }

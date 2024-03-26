@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// An enum defines a variable type with a few prenamed values // a
+
+// An enum defines a variable type with a few prenamed values
 public enum eCardState
 {
     drawpile,
@@ -9,6 +10,7 @@ public enum eCardState
     target,
     discard
 }
+
 public class CardProspector : Card
 { // Make sure CardProspector extends Card
     [Header("Set Dynamically: CardProspector")]
@@ -27,6 +29,6 @@ public class CardProspector : Card
         // Call the CardClicked method on the Prospector singleton
         Prospector.S.CardClicked(this);
         // Also call the base class (Card.cs) version of this method
-        base.OnMouseUpAsButton(); // a
-    }
-}
+        base.OnMouseUpAsButton();
+    }
+}
