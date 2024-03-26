@@ -272,6 +272,7 @@ public class Deck : MonoBehaviour {
 			card.faceUp = startFaceUp;
 			
 			cards.Add (card);
+
 		} // for all the Cardnames	
 	} // makeCards
 	
