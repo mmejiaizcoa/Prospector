@@ -5,10 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class Prospector : MonoBehaviour
+public class Golf : MonoBehaviour
 {
 
-    static public Prospector S;
+    static public Golf S;
 
     [Header("Set in Inspector")]
     public TextAsset deckXML;
@@ -27,11 +27,11 @@ public class Prospector : MonoBehaviour
     [Header("Set Dynamically")]
     public Deck deck;
     public Layout layout;
-    public List<CardProspector> drawPile;
+    public List<CardGolf> drawPile;
     public Transform layoutAnchor;
-    public CardProspector target;
-    public List<CardProspector> tableau;
-    public List<CardProspector> discardPile;
+    public CardGolf target;
+    public List<CardGolf> tableau;
+    public List<CardGolf> discardPile;
     public FloatingScore fsRun;
 
     void Awake()
@@ -89,25 +89,25 @@ public class Prospector : MonoBehaviour
         layout.ReadLayout(layoutXML.text); // Pass LayoutXML to it
 
 
-        drawPile = ConvertListCardsToListCardProspectors(deck.cards);
+        drawPile = ConvertListCardsToListCardGolfs(deck.cards);
         LayoutGame();
     }
-    List<CardProspector> ConvertListCardsToListCardProspectors(List<Card> lCD)
+    List<CardGolf> ConvertListCardsToListCardGolfs(List<Card> lCD)
     {
-        List<CardProspector> lCP = new List<CardProspector>();
-        CardProspector tCP;
+        List<CardGolf> lCP = new List<CardGolf>();
+        CardGolf tCP;
         foreach (Card tCD in lCD)
         {
-            tCP = tCD as CardProspector;
+            tCP = tCD as CardGolf;
             lCP.Add(tCP);
         }
         return (lCP);
     }
 
     // The Draw function will pull a single card from the drawPile and return it
-    CardProspector Draw()
+    CardGolf Draw()
     {
-        CardProspector cd = drawPile[0]; // Pull the 0th CardProspector
+        CardGolf cd = drawPile[0]; // Pull the 0th CardGolf
         drawPile.RemoveAt(0); // Then remove it from List<> drawPile
         return (cd); // And return it
     }
@@ -122,7 +122,7 @@ public class Prospector : MonoBehaviour
             layoutAnchor = tGO.transform; // Grab its Transform
             layoutAnchor.transform.position = layoutCenter; // Position it
         }
-        CardProspector cp;
+        CardGolf cp;
         // Follow the layout
         foreach (SlotDef tSD in layout.slotDefs)
         {
@@ -139,15 +139,15 @@ public class Prospector : MonoBehaviour
             // ^ Set the localPosition of the card based on slotDef
             cp.layoutID = tSD.id;
             cp.slotDef = tSD;
-            // CardProspectors in the tableau have the state CardState.tableau
+            // CardGolfs in the tableau have the state CardState.tableau
             cp.state = eCardState.tableau;
-            // CardProspectors in the tableau have the state CardState.tableau
+            // CardGolfs in the tableau have the state CardState.tableau
             cp.SetSortingLayerName(tSD.layerName); // Set the sorting layers
 
-            tableau.Add(cp); // Add this CardProspector to the List<> tableau
+            tableau.Add(cp); // Add this CardGolf to the List<> tableau
         }
         // Set which cards are hiding others
-        foreach (CardProspector tCP in tableau)
+        foreach (CardGolf tCP in tableau)
         {
             foreach (int hid in tCP.slotDef.hiddenBy)
             {
@@ -163,10 +163,10 @@ public class Prospector : MonoBehaviour
         UpdateDrawPile();
     }
 
-    // Convert from the layoutID int to the CardProspector with that ID
-    CardProspector FindCardByLayoutID(int layoutID)
+    // Convert from the layoutID int to the CardGolf with that ID
+    CardGolf FindCardByLayoutID(int layoutID)
     {
-        foreach (CardProspector tCP in tableau)
+        foreach (CardGolf tCP in tableau)
         {
             // Search through all cards in the tableau List<>
             if (tCP.layoutID == layoutID)
@@ -181,10 +181,10 @@ public class Prospector : MonoBehaviour
     // This turns cards in the Mine face-up or face-down
     void SetTableauFaces()
     {
-        foreach (CardProspector cd in tableau)
+        foreach (CardGolf cd in tableau)
         {
             bool faceUp = true; // Assume the card will be face-up
-            foreach (CardProspector cover in cd.hiddenBy)
+            foreach (CardGolf cover in cd.hiddenBy)
             {
                 // If either of the covering cards are in the tableau
                 if (cover.state == eCardState.tableau)
@@ -197,7 +197,7 @@ public class Prospector : MonoBehaviour
     }
 
     // Moves the current target to the discardPile
-    void MoveToDiscard(CardProspector cd)
+    void MoveToDiscard(CardGolf cd)
     {
         // Set the state of the card to discard
         cd.state = eCardState.discard;
@@ -214,7 +214,7 @@ public class Prospector : MonoBehaviour
         cd.SetSortOrder(-100 + discardPile.Count);
     }
     // Make cd the new target card
-    void MoveToTarget(CardProspector cd)
+    void MoveToTarget(CardGolf cd)
     {
         // If there is currently a target card, move it to discardPile
         if (target != null) MoveToDiscard(target);
@@ -235,7 +235,7 @@ public class Prospector : MonoBehaviour
     // Arranges all the cards of the drawPile to show how many are left
     void UpdateDrawPile()
     {
-        CardProspector cd;
+        CardGolf cd;
         // Go through all the cards of the drawPile
         for (int i = 0; i < drawPile.Count; i++)
         {
@@ -254,16 +254,17 @@ public class Prospector : MonoBehaviour
             cd.SetSortOrder(-10 * i);
         }
     }
+
     // CardClicked is called any time a card in the game is clicked
-    public void CardClicked(CardProspector cd)
+    public void CardClicked(CardGolf cd)
     {
         // The reaction is determined by the state of the clicked card
         switch (cd.state)
         {
-            case eCardState.target:
+            case EnumScript.eCardState.target:
                 // Clicking the target card does nothing
                 break;
-            case eCardState.drawpile:
+            case EnumScript.eCardState.drawpile:
                 // Clicking any card in the drawPile will draw the next card
                 MoveToDiscard(target); // Moves the target to the discardPile
                 MoveToTarget(Draw()); // Moves the next drawn card to the target
@@ -271,7 +272,7 @@ public class Prospector : MonoBehaviour
                 ScoreManager.EVENT(eScoreEvent.draw);
                 FloatingScoreHandler(eScoreEvent.draw);
                 break;
-            case eCardState.tableau:
+            case EnumScript.eCardState.tableau:
                 // Clicking a card in the tableau will check if it's a valid play
                 bool validMatch = true;
                 if (!cd.faceUp)
@@ -296,6 +297,7 @@ public class Prospector : MonoBehaviour
         // Check to see whether the game is over or not
         CheckForGameOver();
     }
+
     // Test whether the game is over
     void CheckForGameOver()
     {
@@ -313,7 +315,7 @@ public class Prospector : MonoBehaviour
             return;
         }
         // Check for remaining valid plays
-        foreach (CardProspector cd in tableau)
+        foreach (CardGolf cd in tableau)
         {
             if (AdjacentRank(cd, target))
             {
@@ -357,7 +359,7 @@ public class Prospector : MonoBehaviour
             FloatingScoreHandler(eScoreEvent.gameLoss);
         }
         // Reload the scene, resetting the game
-        //SceneManager.LoadScene("__Prospector_Scene_0");
+        //SceneManager.LoadScene("__Golf_Scene_0");
         // Reload the scene in reloadDelay seconds
         // This will give the score a moment to travel
         Invoke("ReloadLevel", reloadDelay);
@@ -365,11 +367,11 @@ public class Prospector : MonoBehaviour
     void ReloadLevel()
     {
         // Reload the scene, resetting the game
-        SceneManager.LoadScene("__Prospector_Scene_0");
+        SceneManager.LoadScene("Golf_Scene_0");
     }
 
     // Return true if the two cards are adjacent in rank (A & K wrap around)
-    public bool AdjacentRank(CardProspector c0, CardProspector c1)
+    public bool AdjacentRank(CardGolf c0, CardGolf c1)
     {
         // If either card is face-down, it's not adjacent.
         if (!c0.faceUp || !c1.faceUp) return (false);
