@@ -39,7 +39,7 @@ public class Deck : MonoBehaviour
     public Dictionary<string, Sprite> dictSuits;
 
 
-    // called by Golf when it is ready
+    // called by Prospector when it is ready
     public void InitDeck(string deckXMLText)
     {
         // from page 576

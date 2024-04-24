@@ -34,9 +34,9 @@ public class ScoreManager : MonoBehaviour
             Debug.LogError("ERROR: ScoreManager.Awake(): S is already set!");
         }
         // Check for a high score in PlayerPrefs
-        if (PlayerPrefs.HasKey("GolfHighScore"))
+        if (PlayerPrefs.HasKey("ProspectorHighScore"))
         {
-            HIGH_SCORE = PlayerPrefs.GetInt("GolfHighScore");
+            HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
         }
         // Add the score from last round, which will be >0 if it was a win
         score += SCORE_FROM_PREV_ROUND;
@@ -87,7 +87,7 @@ public class ScoreManager : MonoBehaviour
                     print("You got the high score! High score: " + score);
                     HIGH_SCORE = score;
 
-                    PlayerPrefs.SetInt("GolfHighScore", score);
+                    PlayerPrefs.SetInt("ProspectorHighScore", score);
                 }
                 else
                 {
