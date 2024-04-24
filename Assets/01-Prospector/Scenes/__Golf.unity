@@ -918,7 +918,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 10
-  m_Depth: -15
+  m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -964,7 +964,7 @@ MonoBehaviour:
   layoutXML: {fileID: 4900000, guid: ad008da4e741c4d4cbead2c01a8714c1, type: 3}
   xOffset: 3
   yOffset: -2.5
-  layoutCenter: {x: 0, y: 0, z: 0}
+  layoutCenter: {x: 0, y: -0.25, z: 0}
   fsPosMid: {x: 0.5, y: 0.9}
   fsPosRun: {x: 0.5, y: 0.75}
   fsPosMid2: {x: 0.4, y: 1}
