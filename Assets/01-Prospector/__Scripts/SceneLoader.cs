@@ -14,4 +14,9 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("__Golf"); 
     }
+
+    public void LoadScene3()
+    {
+        SceneManager.LoadScene("mainScene");
+    }
 }
